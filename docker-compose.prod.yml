@@ -1,0 +1,28 @@
+version: '3'
+services:
+  api:
+    image: 631263/build_laravel_production:1.0
+    # build:
+    #   dockerfile: Dockerfile.prod
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/app/storage
+    ports:
+      - "8000:80"
+    networks:
+      - app
+  redis:
+    image: redis:6
+    volumes:
+      - 'data.redis:/data'
+    networks:
+      - app
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+volumes:
+  data.redis:
+    driver: local
+networks:
+  app:
+    driver: bridge
